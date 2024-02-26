@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="container">
+      <div id="header"></div>
+
+      <div id="orderBox">
+        <button onclick="displayCoffeeType()">Start Order</button>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    let coffeeType;
+    let condimentOne;
+    let condimentTwo;
+    let condimentThree;
+    let condimentFour;
+    let condimentCount = 0;
+
+    function displayCoffeeType() {
+      let holder = document.getElementById("orderBox");
+
+      holder.innerHTML =
+        "<button onclick='changeCoffeeType(`houseblend`)'>HouseBlend</button><button onclick='changeCoffeeType(`darkroast`)'>DarkRoast</button><button onclick='changeCoffeeType(`decaf`)'>Decaf</button><button onclick='changeCoffeeType(`espresso`)'>Espresso</button>";
+    }
+
+    function changeCoffeeType(coffee) {
+      console.log("error");
+      let coffeeType = coffee;
+      displayCondimentMenu();
+    }
+
+    function displayCondimentMenu() {
+      let holder = document.getElementById("orderBox");
+      holder.innerHTML =
+        '  <div class="condiments">    <button onclick="addCondiment(`Soy`)">Soy</button>    <button onclick="addCondiment(`Milk`)">Milk</button>    <button onclick="addCondiment(`Whip`)">Whip</button>    <button onclick="addCondiment(`Mocha`)">Mocha</button>  </div>  <div class="current">    <h2>Click To Remove Item</h2>    <button onclick="goBackToDrink()">Drink</button>    <button onClick="removeCondiment(`one`)">CondimentOne</button>    <button onclick="removeCondiment(`two`)">CondimentTwo</button>    <button onclick="removeCondiment(`three`)">CondimentThree</button>    <button onclick="removeCondiment(`four`)">CondimentFour</button>    <button onclick="finalize()">Confirm Order</button>  </div>';
+    }
+
+    function addCondiment(condiment) {
+      if (condimentCount == 1) {
+        condimentOne = condiment;
+      }
+      if (condimentCount == 2) {
+        condimentTwo = condiment;
+      }
+      if (condimentCount == 3) {
+        condimentThree = condiment;
+      }
+      if (condimentCount == 4) {
+        condimentFour = condiment;
+      }
+      condimentCount++;
+    }
+
+    function removeCondiment(number) {
+      if (number == "one") {
+        condimentOne = null;
+      }
+      if (number == "two") {
+        condimentTwo = null;
+      }
+      if (number == "three") {
+        condimentThree = null;
+      }
+      if (number == "four") {
+        condimentFour = null;
+      }
+      condimentCount--;
+    }
+
+    function goBackToDrink() {
+      let coffeeType = null;
+      displayCoffeeType();
+    }
+
+    function finalize() {
+      let holder = document.getElementById("orderBox");
+      holder.innerHTML = `<h2> Order Placed: </h2>        <p>Order ID: '24"</p>         <p>Order: "houseblend with addOns"</p>        <p>Order Price: "99.99"</p>)`;
+
+      let condiments = [];
+
+      if (condimentOne != null) {
+        condiments.push(condimentOne);
+      }
+      if (condimentTwo != null) {
+        condiments.push(condimentTwo);
+      }
+      if (condimentThree != null) {
+        condiments.push(condimentThree);
+      }
+      if (condimentFour != null) {
+        condiments.push(condimentFour);
+      }
+
+      let order = {
+        beverage: coffeeType,
+        condiments: condiments,
+      };
+
+      let request = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      };
+
+      fetch("http://localhost:8080/orders", request).then("Coffee Ordered");
+    }
+  </script>
+</html>
